@@ -21,7 +21,7 @@
 
 ; Get polynomial from a coefficients
 ; Note status says if its the first time called or not
-; Initially call with power = -1
+; Initially call with power = -1,status = 1
 ; Will return a polynomial in x
 (defun getPoly (coeff status power)
    (if (= status 1)
@@ -36,11 +36,6 @@
         )
        )
     )
-)
-
-
-(defun test(lst)
-    (third (first lst))
 )
 
 ; Polynomial Integration
@@ -66,12 +61,41 @@
     )
 )
 
+;Call with status = 1
+;Returns the new numerator after one iteration of division
+;Mul is the factor by which denom should be multiplied
+(defun newNum (num den mul status)
+   (cond
+        ((= (length den) 0) num)
+        ( (= status 1) (cons (- (first num) 1) (newNum (cdr (cdr num)) (cdr (cdr den)) mul 0)) )
+        (t (cons (- (first num) (* mul (first den))) (newNum (cdr num) (cdr den) mul 0)))
+
+   )
+
+)
+
+;Performs division on two polynomials
+;It takes the coefficients of numerator and denominator as the above mentioned format
+;Initially call with status = 1
+(defun Divide (num den status)
+    (cond
+    ( (< (first num) (first den)) nil)
+     ( (= status 1) (cons (- (first num) (first den)) (Divide num den 0)))
+     (t (cons (/ (second num) (second den)) (Divide (newNum num den (/ (second num) (second den)) 1) den 0))) 
+    )
+
+)
 
 
+;Call the function with the numberato polynomial and  the denominator polynomial in the format mentioned above
 (defun LongDivision (numerator denominator)
- 
-
     (setf numExp (getCoeff numerator 0))
     (setf denExp (getCoeff denominator 0))
- 
+    
+    (getPoly (Divide numExp denExp 1) 1 -1)
+
+)
+
+(defun test(lst)
+    (third (first lst))
 )
