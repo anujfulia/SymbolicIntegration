@@ -174,7 +174,8 @@
 (defun constLinearDiv(poly)
     (list "T2(" (first (second (third poly))) "," (first (third (third poly))) "," (second poly) "," (second (second (third poly)))")")
 )
-    
+
+;Driver function which decides which rule to apply
 (defun driver(func)
     (cond 
         
@@ -182,6 +183,21 @@
         ( (string= (first func) "/")
 
             (LongDivision (second func) (third func))
+        )
+    )
+)
+;Differentiation of polynomials
+;Status = 1 initially
+(defun differentiation(polynomial status)
+    (if (= status 1)
+        (cond
+            ((string= (first polynomial) "+") (cons "+" (differentiation (cdr polynomial) 0)))
+        )
+        (cond
+            ((= (length polynomial) 0) nil)
+            ((= (third (first polynomial)) 0) nil)
+            (t (cons (list (* (first (first polynomial)) (third (first polynomial))) (second (first polynomial)) (- (third (first polynomial))1))
+            (differentiation (cdr polynomial) 0)))
         )
     )
 )
