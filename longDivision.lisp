@@ -85,19 +85,82 @@
 ;Initially call with status = 1
 (defun Divide (num den status)
     (cond
-    ( (< (first num) (first den)) nil)
+    ( (< (first num) (first den)) (list num))
      ( (= status 1) (cons (- (first num) (first den)) (Divide num den 0)))
      (t (cons (/ (second num) (second den)) (Divide (newNum num den (/ (second num) (second den)) 1) den 0))) 
     )
 )
 
+;Check if a polynomial representation is equivalent to not a zero
+;As usual status = 1 initially
+(defun notZero (poly status)
+    (if (= (length poly) 0) nil
+        (if (= status 1) (notZero (cdr poly) 0)
+            (cond
+                ((not (= (car poly) 0)) t)
+                (t (notZero (cdr poly) 0))
+            )
+        )
+    )
+)
+
+;Checks if the remainder obtained is zero
+(defun hasRemainder (lst)
+    (cond
+     ( (= (length lst) 0) nil)
+     ( (listp (car lst)) (or (notZero (car lst) 1) (hasRemainder (cdr lst))))
+     (t (hasRemainder (cdr lst)))
+
+    )
+)
+
+;Get the kast element in a list
+(defun getLast (lst)
+    (if (= (length lst) 1) (car lst)
+        (getLast (cdr lst))
+    )
+)
+
+;Integrates certain standard functions based on hardcoded values
+;For now the standard forms are c1/(ax+b) and c1/(ax2 + bx + c)
+(defun standardIntegrate(num den)
+    (setf c1 (getLast num))
+    (if (= (car den) 1) (constLinearDiv (list "/" c1 (getPoly den 1 -1)))
+        (constSquareDiv (list "/" c1 (getPoly den 1 -1))) 
+    )
+)
+
+;StripLast- this strips the last element which is assumed to be a lst
+(defun StripLast(lst)
+    (if (listp (car lst)) nil
+        (cons (car lst) (StripLast (cdr lst)))
+    )
+
+)
+
+;Gets the last element in the list and assumes that to be the remainder
+(defun getRemainder(lst)
+     (if (not (listp (car lst))) (getRemainder (cdr lst))
+        (car lst)
+    )  
+
+)
+    
 ;Call the function with the numerator polynomial and  the denominator polynomial in the format mentioned above
 (defun LongDivision (numerator denominator)
     (setf numExp (getCoeff numerator 0))
     (setf denExp (getCoeff denominator 0))
     
-    (getPoly (Divide numExp denExp 1) 1 -1)
-    ;(Divide numExp denExp 1)
+    ;(getPoly (Divide numExp denExp 1) 1 -1)
+    (setf quotient (Divide numExp denExp 1))
+    (setf remainder (getRemainder quotient))
+    (if (hasRemainder quotient)
+        (list "+" (getPoly (stripLast quotient) 1 -1) (standardIntegrate remainder denExp))
+        (getPoly (stripLast quotient)1 -1)
+        
+    )
+
+
 )
 
 ;Functions of the form '("/" c1 '("+" (a x 2) (b x 1) (c x 0)))
