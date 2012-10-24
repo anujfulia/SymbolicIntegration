@@ -14,9 +14,38 @@
         )
     )
 )
+
+; Get polynomial from a coefficients
+
+
+
 (defun test(lst)
     (third (first lst))
 )
+
+; Polynomial Integration
+; Input: '("+" (4 x 3) (3 x 0.5))
+; Output: '("+" (1 x 4) (2 x 1.5))
+
+(defun polyIntegration (polyn)
+    (if (stringp (first polyn))
+        (cond
+            ((string= (first polyn) "+") (cons "+" (polyIntegration (cdr polyn) )  ))
+        )
+        (cond
+            ((= (length polyn) 0) nil)
+            (t 
+             (cons
+             ; Get the new tuple (coeff/(power+1) x power+1)
+
+                (list (/ (first (first polyn)) (+ (third (first polyn)) 1)) (second (first polyn)) (+ (third (first polyn)) 1))
+                (polyIntegration (cdr polyn))
+            )
+            )
+        )
+    )
+)
+
 
 
 (defun LongDivision (numerator denominator)
