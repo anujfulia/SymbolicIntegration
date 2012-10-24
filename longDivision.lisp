@@ -3,16 +3,19 @@
 ;Sample input (getCoeff '("+" (4 x 3)) 0)
 ;Sample output (3 4 0 0 0)
 (defun getCoeff (lst power)
-    (cond
-        ((equal power 0) 0)
-        ((string= (first lst) "+") (cons (third (second lst)) (getCoeff (cdr lst) (third (second lst)))  ))
-        ((equal power (third (first lst))) (cons (first (car lst)) (getCoeff (cdr lst) (- power 1))))
-        (t (cons 0  (getCoeff (cdr lst) (- power 1))))
-
+    (if (stringp (first lst))
+        (cond
+            ((string= (first lst) "+") (cons (third (second lst)) (getCoeff (cdr lst) (third (second lst)))  ))
+        )
+        (cond
+            ((= power -1) nil)
+            ((= power (third (first lst))) (cons (car (car lst)) (getCoeff (cdr lst) (- power 1))))
+            (t (cons 0 (getCoeff lst (- power 1))))
+        )
     )
 )
 (defun test(lst)
-    (string= (first lst) "+")
+    (third (first lst))
 )
 
 
