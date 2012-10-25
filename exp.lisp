@@ -1,3 +1,11 @@
+(defun exp-p(input)
+    (if (or (equal (car input) 'exp) (equal (car input) 'sinh)
+            (equal (car input) 'cosh) (equal (car input) 'tanh)
+            (equal (car input) 'cosech) (equal (car input) 'cot)
+        ) t nil
+    )
+)
+
 (defun IntegralExp(input)
 	(cond
 		(
@@ -185,14 +193,6 @@
 				)
 		)
 	)	
-	
-
-		
-	
-
-		
-	
-	
 )
 
 

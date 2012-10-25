@@ -179,6 +179,7 @@
         
         ( (poly-p func 1) (polyIntegration func))
         ( (trig-p func) (IntegrateBasicTrig func)) 
+        ( (exp-p func) (IntegralExp func))
         ( (or (equal (first func) '-) (equal (first func) '*))
             ;`(,(first func) ( ,(first (second func)) ,(second (second func)) ,(IntegrateBasicTrig (third (second func)))))
             (integrateTrigWithCoeff func)
