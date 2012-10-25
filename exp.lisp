@@ -30,10 +30,8 @@
 					)
 				)
 		)
-	)	
-	
-	(cond
-		(
+		
+				(
 			(equal (car input) 'sinh) 
 				(let* 
 					((lst  (car (cdr input)) )) 
@@ -187,6 +185,9 @@
 				)
 		)
 	)	
+	
+
+		
 	
 
 		
