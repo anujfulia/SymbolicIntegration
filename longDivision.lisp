@@ -159,8 +159,6 @@
         (getPoly (stripLast quotient)1 -1)
         
     )
-
-
 )
 
 ;Functions of the form '("/" c1 '("+" (a x 2) (b x 1) (c x 0)))
@@ -180,12 +178,34 @@
     (cond 
         
         ( (poly-p func 1) (polyIntegration func))
+        ( (trig-p func) (IntegrateBasicTrig func)) 
+        ( (or (equal (first func) '-) (equal (first func) '*) (equal (first func) '+))
+            ;`(,(first func) ( ,(first (second func)) ,(second (second func)) ,(IntegrateBasicTrig (third (second func)))))
+            (integrateTrigWithCoeff func)
+        )
         ( (string= (first func) "/")
-
             (LongDivision (second func) (third func))
+        )
+        ( (string= (first func) "*")
+            (if (poly-p (second func) 1) (IntegrateParts (second func) (third func) )
+                (IntegrateParts (third func) (second func))
+            )
         )
     )
 )
+
+; Integrates the trignometric functions with coeeficients before it
+(defun integrateTrigWithCoeff (func)
+    (cond
+     ((not (listp (first func))) (cons (first func) (integrateTrigWithCoeff (cdr func))))
+     ((trig-p (first func)) `(,(IntegrateBasicTrig (first func))))
+     (t `(,(integrateTrigWithCoeff (car func))))
+    )
+
+
+)
+
+
 ;Differentiation of polynomials
 ;Status = 1 initially
 (defun differentiation(polynomial status)
@@ -199,6 +219,18 @@
             (t (cons (list (* (first (first polynomial)) (third (first polynomial))) (second (first polynomial)) (- (third (first polynomial))1))
             (differentiation (cdr polynomial) 0)))
         )
+    )
+)
+
+;Function asumes ufun to be a poly-p and vfun to be a trig-p
+;For now now check on the type is made assuming the function gets a correct input. Later can be changed for generic
+(defun IntegrateParts ( ufun vfun )
+   
+    (setf secondTerm (list "*" (driver vfun) (differentiation ufun 1)))
+    (setf firstTerm (list "*" ufun (driver vfun)))
+    (if (>= (length (differentiation ufun 1)) 2)
+        (list "-" firstTerm (driver secondTerm))
+        (list firstTerm)
     )
 )
 

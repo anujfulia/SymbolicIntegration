@@ -1,3 +1,18 @@
+;Check if a function is a trignometric function
+(defun trig-p(func)
+    (cond
+     ((equal (car func) 'sin) t)
+     ((equal (car func) 'cos) t)
+     ((equal (car func) 'tan) t)
+     ((equal (car func) 'csc) t)
+     ((equal (car func) 'sec) t)
+     ((equal (car func) 'cot) t)
+     (t nil)
+    )
+)
+
+
+
 ;----------------------------------------------------------------
 ; INPUT : (IntegrateBasicTrig '(trig (+ (* a x) b)))
 ; 		  where trig = basic trigonometric functions 
