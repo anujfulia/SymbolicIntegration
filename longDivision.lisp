@@ -179,9 +179,12 @@
         
         ( (poly-p func 1) (polyIntegration func))
         ( (trig-p func) (IntegrateBasicTrig func)) 
-        ( (or (equal (first func) '-) (equal (first func) '*) (equal (first func) '+))
+        ( (or (equal (first func) '-) (equal (first func) '*))
             ;`(,(first func) ( ,(first (second func)) ,(second (second func)) ,(IntegrateBasicTrig (third (second func)))))
             (integrateTrigWithCoeff func)
+        )
+        ((equal (first func) '+)
+            (cons '+ (addition (rest func)))
         )
         ( (string= (first func) "/")
             (LongDivision (second func) (third func))
@@ -191,6 +194,13 @@
                 (IntegrateParts (third func) (second func))
             )
         )
+    )
+)
+
+;Performs the integration on addition of operations
+(Defun addition (func)
+    (if  (= (length func) 0) nil
+    (cons (driver (first func)) (addition (rest func)))
     )
 )
 
@@ -204,7 +214,6 @@
 
 
 )
-
 
 ;Differentiation of polynomials
 ;Status = 1 initially
