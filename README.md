@@ -11,7 +11,7 @@ Features Supported
 
 3) Basic Trignometric Forms
 
-4) Basic Logarithmic,Exponential and hyperbolic functions
+4) Basic Logarithmic,Exponential, Power and hyperbolic functions
 
 5) Integration by parts on polynomials, trignometric and exponential functions. (Note functions after u' * int(v) should also be one of the forms supported).
 
