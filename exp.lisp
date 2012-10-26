@@ -2,14 +2,17 @@
     (if (or (equal (car input) 'exp) (equal (car input) 'sinh)
             (equal (car input) 'cosh) (equal (car input) 'tanh)
             (equal (car input) 'cosech) (equal (car input) 'cot)
-            (equal (car input) 'log)
+            (equal (car input) 'log)  (equal (car input) 'pow)
         ) t nil
     )
 )
 
 (defun IntegralExp(input)
 	(cond
-		(
+	( (equal (car input) 'pow)
+        `(/ ,input (* ,(second (second (third input))) (log ,(second input))))
+    )
+    (
 			(equal (car input) 'exp) 
 				(let* 
 					((lst  (car (cdr input)) )) 
