@@ -2,6 +2,7 @@
     (if (or (equal (car input) 'exp) (equal (car input) 'sinh)
             (equal (car input) 'cosh) (equal (car input) 'tanh)
             (equal (car input) 'cosech) (equal (car input) 'cot)
+            (equal (car input) 'log)
         ) t nil
     )
 )
@@ -192,6 +193,40 @@
 					)
 				)
 		)
+        
+        (
+			(equal (car input) 'log) 
+				(let* 
+					((lst  (car (cdr input)) )) 
+					;(second lst)
+					(cond
+						(
+							(eq lst 'x)  '(* x (- (log x) 1))
+						)
+						(
+							(eq (car lst) '*) `(* ,(/ 1 (second lst)) (* (* ,(second lst) x) (- (log (* ,(second lst) x)) 1)))  
+						)
+						(
+							(eq (car lst) '+) 
+								(let*
+									((lst2 (car (cdr lst)) ))
+									(cond
+										(
+											(eq lst2 'x) `(* (+ x ,(third lst)) (- (log (+ x ,(third lst))) 1))
+										)
+										(
+											(eq (car lst2) '*) `(* ,(/ 1 (second lst2)) (* (+ (* ,(second lst2) x) ,(third lst)) (- (log (+ (* ,(second lst2) x) ,(third lst))) 1)) )   
+										)
+									)
+									
+								)
+						)
+					)
+				)
+		)
+
+
+
 	)	
 )
 
