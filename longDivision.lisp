@@ -192,9 +192,16 @@
             `(,(first divResult) ,(driver (second divResult)) ,(third divResult))
         )
         ( (string= (first func) "*")
-            (if (poly-p (second func) 1) (IntegrateParts (second func) (third func) )
+            (cond
+                ((and (poly-p (second func) 1) (poly-p (third func) 1)) 
+                    (getPoly (multiplyPoly (getCoeff (second func) -1) (getCoeff (third func) -1) 1 -1) 1 -1)
+                    ;(second func)
+                )
+          
+            (t (if (poly-p (second func) 1) (IntegrateParts (second func) (third func) )
                 (IntegrateParts (third func) (second func))
-            )
+            ))
+            ) 
         )
     )
 )
@@ -243,6 +250,28 @@
         (list "-" firstTerm (driver secondTerm))
         (list firstTerm)
     )
+)
+
+;Multiplies two polynomials
+;Call initially with status = 1
+;Initially call with position = -1
+(defun multiplyPoly (poly1 poly2 status pos)
+    (if (= status 1) (cons (+ (first poly1) (first poly2)) (multiplyPoly (rest poly1) (rest poly2) 0 0))
+       
+     (cond
+        ((= (length poly1) 0) nil)
+        ((= pos (length poly2)) (cons (repeatedmultiplyAdd (rest poly1) poly2 (- pos 1)) (multiplyPoly (rest poly1) poly2 0 pos)))
+        (t (cons (repeatedmultiplyAdd poly1 poly2 pos) (multiplyPoly poly1 poly2 0 (+ pos 1)))) 
+    )
+    )
+)
+
+;Repeated mulyiplication and addition of similar powers
+(defun repeatedmultiplyAdd(poly1 poly2 pos)
+   (if (or (= (length poly1) 0) (= pos -1)) 0
+        (+ (* (first poly1) (nth pos poly2)) (repeatedmultiplyAdd (rest poly1) poly2 (- pos 1)))    
+
+   )
 )
 
 (defun test(lst)
